@@ -22,7 +22,7 @@ def init_training_materials():
         
         # Module 1: Sales Mindset & The 10X Rule - One-Page Summary
         material1 = TrainingMaterial(
-            module_id=1,
+            module_number=1,
             title="One-Page Summary",
             material_type="summary",
             content="""
@@ -93,7 +93,7 @@ def init_training_materials():
         
         # Module 1: Sales Mindset & The 10X Rule - Action Worksheet
         material2 = TrainingMaterial(
-            module_id=1,
+            module_number=1,
             title="Action Worksheet",
             material_type="worksheet",
             content="""
