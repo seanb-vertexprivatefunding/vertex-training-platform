@@ -355,14 +355,14 @@ def get_training_material(material_id):
     """Get training material as web page"""
     material = TrainingMaterial.query.get_or_404(material_id)
     
-    # Parse content JSON
+    # Parse content JSON or use HTML directly
     try:
         content_data = json.loads(material.content)
+        # Generate HTML from structured JSON
+        content_html = generate_content_html(content_data, material.material_type)
     except:
-        content_data = {}
-    
-    # Generate HTML from content
-    content_html = generate_content_html(content_data, material.material_type)
+        # Content is already HTML, use it directly
+        content_html = material.content
     
     return render_template_string(
         TRAINING_MATERIAL_TEMPLATE,
@@ -390,10 +390,10 @@ def download_training_material_pdf(material_id):
     # Otherwise generate PDF from HTML
     try:
         content_data = json.loads(material.content)
+        content_html = generate_content_html(content_data, material.material_type)
     except:
-        content_data = {}
-    
-    content_html = generate_content_html(content_data, material.material_type)
+        # Content is already HTML
+        content_html = material.content
     
     html_string = render_template_string(
         TRAINING_MATERIAL_TEMPLATE,
