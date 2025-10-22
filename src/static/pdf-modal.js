@@ -94,7 +94,7 @@
         } else if (buttonText.includes('Script Templates')) {
             e.preventDefault();
             e.stopPropagation();
-            openPDFModal('/training-materials/Module_01_Script_Templates.pdf', 'Module 1: Script Templates');
+            openPDFModal('/training-materials/Module_01_Sales_Mindset_Training_Guide.pdf', 'Module 1: Training Guide');
         }
     }, true); // Use capture phase to intercept before React
     
