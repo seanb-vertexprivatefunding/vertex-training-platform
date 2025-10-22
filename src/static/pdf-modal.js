@@ -82,7 +82,7 @@
         
         const buttonText = button.textContent;
         
-        // Check if this is a training material button
+        // Check if this is a training material button on module page
         if (buttonText.includes('One-Page Summary')) {
             e.preventDefault();
             e.stopPropagation();
@@ -95,6 +95,35 @@
             e.preventDefault();
             e.stopPropagation();
             openPDFModal('/training-materials/Module_01_Sales_Mindset_Training_Guide.pdf', 'Module 1: Training Guide');
+        }
+        // Handle trainer resource page buttons
+        else if (buttonText.includes('Training Guide')) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Determine which module based on context
+            const moduleCard = button.closest('[class*="Module"]') || button.closest('div');
+            const cardText = moduleCard ? moduleCard.textContent : '';
+            
+            if (cardText.includes('Module 1') || cardText.includes('Sales Mindset')) {
+                openPDFModal('/training-materials/Module_01_Sales_Mindset_Training_Guide.pdf', 'Module 1: Training Guide');
+            } else if (cardText.includes('Module 2') || cardText.includes('Understanding Your Buyer')) {
+                openPDFModal('/training-materials/Module_02_Understanding_Buyer_Training_Guide.pdf', 'Module 2: Training Guide');
+            }
+        } else if (buttonText.includes('Worksheet') && !buttonText.includes('Action')) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Determine which module based on context
+            const moduleCard = button.closest('[class*="Module"]') || button.closest('div');
+            const cardText = moduleCard ? moduleCard.textContent : '';
+            
+            // Extract module number from context
+            const moduleMatch = cardText.match(/Module (\d+)/);
+            if (moduleMatch) {
+                const moduleNum = moduleMatch[1].padStart(2, '0');
+                openPDFModal(`/training-materials/Module_${moduleNum}_Worksheet.pdf`, `Module ${parseInt(moduleNum)}: Worksheet`);
+            }
         }
     }, true); // Use capture phase to intercept before React
     
