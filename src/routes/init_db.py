@@ -2,7 +2,7 @@
 Database initialization route for populating training materials on production
 """
 from flask import Blueprint, jsonify
-from src.models.database import db
+from src.models.user import db
 from src.models.training_material import TrainingMaterial
 import os
 
