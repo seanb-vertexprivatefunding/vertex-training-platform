@@ -343,7 +343,7 @@ TRAINING_MATERIAL_TEMPLATE = '''
         <div class="action-buttons">
             <button class="btn btn-primary" onclick="window.print()">🖨️ Print / Save as PDF</button>
             <a href="/api/training/materials/{{ material_id }}/download-pdf" class="btn btn-secondary">📥 Download PDF</a>
-            <button class="btn btn-secondary" onclick="window.history.back()">← Back to Module</button>
+            <button class="btn btn-secondary" onclick="if(window.parent !== window) { window.parent.closeTrainingModal(); } else { window.history.back(); }">← Back to Module</button>
         </div>
     </div>
 </body>
