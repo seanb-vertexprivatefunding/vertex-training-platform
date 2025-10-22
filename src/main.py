@@ -38,8 +38,7 @@ def serve(path):
             return send_file(
                 os.path.join(static_folder_path, path),
                 mimetype='application/pdf',
-                as_attachment=True,
-                download_name=os.path.basename(path)
+                as_attachment=False
             )
         return send_from_directory(static_folder_path, path)
     else:
