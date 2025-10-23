@@ -70,12 +70,36 @@
         document.body.style.overflow = '';
     };
     
+    // Helper function to find module number by searching up the DOM tree
+    function findModuleNumber(button) {
+        let element = button;
+        // Search up to 10 levels in the DOM tree
+        for (let i = 0; i < 10; i++) {
+            if (!element) break;
+            
+            const text = element.textContent || '';
+            
+            // Look for "Module 1", "Module 2", etc.
+            const moduleMatch = text.match(/Module\s+(\d+)/i);
+            if (moduleMatch) {
+                const moduleNum = parseInt(moduleMatch[1]);
+                console.log('Found module number:', moduleNum, 'at level', i);
+                return moduleNum;
+            }
+            
+            element = element.parentElement;
+        }
+        
+        console.log('Could not find module number');
+        return null;
+    }
+    
     // Function to handle button clicks
     function handleButtonClick(button, e) {
         const buttonText = button.textContent.trim();
         console.log('Button clicked:', buttonText);
         
-        // Check if this is a training material button on module page
+        // Check if this is a training material button on module page (salesperson view)
         if (buttonText.includes('One-Page Summary')) {
             if (e) {
                 e.preventDefault();
@@ -109,36 +133,39 @@
                 e.stopImmediatePropagation();
             }
             
-            // Determine which module based on context
-            const moduleCard = button.closest('[class*="Module"]') || button.closest('div');
-            const cardText = moduleCard ? moduleCard.textContent : '';
+            // Find module number by searching up the DOM tree
+            const moduleNum = findModuleNumber(button);
             
-            console.log('Training Guide button - Card text:', cardText);
-            
-            if (cardText.includes('Module 1') || cardText.includes('Sales Mindset')) {
-                openPDFModal('/training-materials/Module_01_Sales_Mindset_Training_Guide.pdf', 'Module 1: Training Guide');
-            } else if (cardText.includes('Module 2') || cardText.includes('Understanding Your Buyer')) {
-                openPDFModal('/training-materials/Module_02_Understanding_Buyer_Training_Guide.pdf', 'Module 2: Training Guide');
+            if (moduleNum) {
+                const modulePadded = String(moduleNum).padStart(2, '0');
+                const pdfPath = `/training-materials/Module_${modulePadded}_Sales_Mindset_Training_Guide.pdf`;
+                const title = `Module ${moduleNum}: Training Guide`;
+                
+                console.log('Opening Training Guide:', pdfPath);
+                openPDFModal(pdfPath, title);
+            } else {
+                console.error('Could not determine module number for Training Guide button');
             }
             return true;
-        } else if (buttonText.includes('Worksheet') && !buttonText.includes('Action')) {
+        } else if (buttonText === 'Worksheet' || (buttonText.includes('Worksheet') && !buttonText.includes('Action'))) {
             if (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
             }
             
-            // Determine which module based on context
-            const moduleCard = button.closest('[class*="Module"]') || button.closest('div');
-            const cardText = moduleCard ? moduleCard.textContent : '';
+            // Find module number by searching up the DOM tree
+            const moduleNum = findModuleNumber(button);
             
-            console.log('Worksheet button - Card text:', cardText);
-            
-            // Extract module number from context
-            const moduleMatch = cardText.match(/Module (\d+)/);
-            if (moduleMatch) {
-                const moduleNum = moduleMatch[1].padStart(2, '0');
-                openPDFModal(`/training-materials/Module_${moduleNum}_Worksheet.pdf`, `Module ${parseInt(moduleNum)}: Worksheet`);
+            if (moduleNum) {
+                const modulePadded = String(moduleNum).padStart(2, '0');
+                const pdfPath = `/training-materials/Module_${modulePadded}_Worksheet.pdf`;
+                const title = `Module ${moduleNum}: Worksheet`;
+                
+                console.log('Opening Worksheet:', pdfPath);
+                openPDFModal(pdfPath, title);
+            } else {
+                console.error('Could not determine module number for Worksheet button');
             }
             return true;
         }
@@ -160,7 +187,8 @@
                 buttonText.includes('Action Worksheet') ||
                 buttonText.includes('Script Templates') ||
                 buttonText.includes('Training Guide') ||
-                (buttonText.includes('Worksheet') && !buttonText.includes('Action'))) {
+                buttonText === 'Worksheet' ||
+                (buttonText.includes('Worksheet') && !buttonText.includes('Action') && !buttonText.includes('Success'))) {
                 
                 console.log('Attaching handler to button:', buttonText);
                 
