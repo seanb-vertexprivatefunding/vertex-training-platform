@@ -138,7 +138,25 @@
             
             if (moduleNum) {
                 const modulePadded = String(moduleNum).padStart(2, '0');
-                const pdfPath = `/training-materials/Module_${modulePadded}_Sales_Mindset_Training_Guide.pdf`;
+                
+                // Map module numbers to their specific PDF filenames
+                const trainingGuideFiles = {
+                    '01': 'Module_01_Sales_Mindset_Training_Guide.pdf',
+                    '02': 'Module_02_Understanding_Buyer_Training_Guide.pdf',
+                    '03': 'Module_03_Sales_Process_Training_Guide.pdf',
+                    '04': 'Module_04_Prospecting_Training_Guide.pdf',
+                    '05': 'Module_05_Discovery_Call_Training_Guide.pdf',
+                    '06': 'Module_06_Rapport_Trust_Training_Guide.pdf',
+                    '07': 'Module_07_Presenting_Solutions_Training_Guide.pdf',
+                    '08': 'Module_08_Objections_Training_Guide.pdf',
+                    '09': 'Module_09_Negotiation_Closing_Training_Guide.pdf',
+                    '10': 'Module_10_Follow_Up_Training_Guide.pdf',
+                    '11': 'Module_11_Account_Management_Training_Guide.pdf',
+                    '12': 'Module_12_Performance_Management_Training_Guide.pdf'
+                };
+                
+                const pdfFilename = trainingGuideFiles[modulePadded] || `Module_${modulePadded}_Training_Guide.pdf`;
+                const pdfPath = `/training-materials/${pdfFilename}`;
                 const title = `Module ${moduleNum}: Training Guide`;
                 
                 console.log('Opening Training Guide:', pdfPath);
