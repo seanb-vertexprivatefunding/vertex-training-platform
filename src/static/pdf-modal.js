@@ -177,7 +177,25 @@
             
             if (moduleNum) {
                 const modulePadded = String(moduleNum).padStart(2, '0');
-                const pdfPath = `/training-materials/Module_${modulePadded}_Worksheet.pdf`;
+                
+                // Map module numbers to their specific worksheet PDF filenames
+                const worksheetFiles = {
+                    '01': 'Module_01_Action_Worksheet.pdf',
+                    '02': 'Module_02_DISC_Assessment_Worksheet.pdf',
+                    '03': 'Module_03_Sales_Process_Worksheet.pdf',
+                    '04': 'Module_04_Prospecting_Worksheet.pdf',
+                    '05': 'Module_05_Discovery_Worksheet.pdf',
+                    '06': 'Module_06_Rapport_Worksheet.pdf',
+                    '07': 'Module_07_Presentation_Worksheet.pdf',
+                    '08': 'Module_08_Objections_Worksheet.pdf',
+                    '09': 'Module_09_Closing_Worksheet.pdf',
+                    '10': 'Module_10_Follow_Up_Worksheet.pdf',
+                    '11': 'Module_11_Account_Management_Worksheet.pdf',
+                    '12': 'Module_12_Performance_Worksheet.pdf'
+                };
+                
+                const pdfFilename = worksheetFiles[modulePadded] || `Module_${modulePadded}_Worksheet.pdf`;
+                const pdfPath = `/training-materials/${pdfFilename}`;
                 const title = `Module ${moduleNum}: Worksheet`;
                 
                 console.log('Opening Worksheet:', pdfPath);
