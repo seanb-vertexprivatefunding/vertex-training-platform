@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salesperson Details - Vertex Sales Training</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1e5128 0%, #2d6a4f 100%);
+            min-height: 100vh;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+        }
+        .module-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+        }
+        .module-card:hover {
+            border-color: #2d6a4f;
+            box-shadow: 0 2px 8px rgba(45, 106, 79, 0.2);
+        }
+        .module-card.completed {
+            background: #f0fdf4;
+            border-color: #22c55e;
+        }
+        .module-card.in-progress {
+            background: #fef3c7;
+            border-color: #f59e0b;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #2d6a4f 0%, #1e5128 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        .progress-bar {
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="max-w-7xl mx-auto p-6">
+        <!-- Header -->
+        <div class="card">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-4">
+                    <button onclick="window.history.back()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition">
+                        ← Back to Dashboard
+                    </button>
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-800" id="salesperson-name">Loading...</h1>
+                        <p class="text-gray-600" id="salesperson-email">Loading...</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div class="text-sm text-gray-600">Current Module</div>
+                    <div class="text-xl font-bold text-green-700" id="current-module">Module 1</div>
+                </div>
+            </div>
+            
+            <!-- Overall Progress -->
+            <div class="mt-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-gray-700">Overall Progress</span>
+                    <span class="text-sm font-bold text-green-700" id="overall-progress">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="text-sm text-gray-600 mt-1" id="modules-completed">0 of 12 modules completed</div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="stat-card">
+                <div class="text-3xl font-bold" id="total-calls">0</div>
+                <div class="text-sm opacity-90">Total Calls</div>
+            </div>
+            <div class="stat-card">
+                <div class="text-3xl font-bold" id="total-meetings">0</div>
+                <div class="text-sm opacity-90">Meetings</div>
+            </div>
+            <div class="stat-card">
+                <div class="text-3xl font-bold" id="closed-deals">0</div>
+                <div class="text-sm opacity-90">Closed Deals</div>
+            </div>
+            <div class="stat-card">
+                <div class="text-3xl font-bold" id="total-revenue">$0</div>
+                <div class="text-sm opacity-90">Total Revenue</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Module Progress -->
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">📚 Module Progress</h2>
+                <div id="module-list">
+                    <!-- Modules will be inserted here by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Revenue & Sessions -->
+            <div>
+                <!-- Revenue Breakdown -->
+                <div class="card">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">💰 Revenue Breakdown</h2>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <span class="text-gray-700">This Month</span>
+                            <span class="font-bold text-green-700" id="revenue-month">$0</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <span class="text-gray-700">This Quarter</span>
+                            <span class="font-bold text-green-700" id="revenue-quarter">$0</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <span class="text-gray-700">Year to Date</span>
+                            <span class="font-bold text-green-700" id="revenue-ytd">$0</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <span class="text-gray-700">Conversion Rate</span>
+                            <span class="font-bold text-blue-700" id="conversion-rate">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Session History -->
+                <div class="card mt-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">📅 Session History</h2>
+                    <div id="session-history" class="space-y-3">
+                        <div class="text-center text-gray-500 py-8">
+                            No training sessions recorded yet
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get salesperson ID from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const salespersonId = urlParams.get('id');
+        const salespersonEmail = urlParams.get('email');
+
+        // Module data
+        const modules = [
+            { id: 1, title: "Sales Mindset & The 10X Rule", week: 1 },
+            { id: 2, title: "Understanding Your Buyer", week: 2 },
+            { id: 3, title: "The Sales Process Framework", week: 3 },
+            { id: 4, title: "Prospecting & Lead Generation", week: 4 },
+            { id: 5, title: "Mastering the Discovery Call", week: 5 },
+            { id: 6, title: "Building Rapport & Trust", week: 6 },
+            { id: 7, title: "Presenting Solutions", week: 7 },
+            { id: 8, title: "Handling Objections", week: 8 },
+            { id: 9, title: "Negotiation & Closing", week: 9 },
+            { id: 10, title: "Follow-Up Systems", week: 10 },
+            { id: 11, title: "Account Management & Upselling", week: 11 },
+            { id: 12, title: "Personal Performance Management", week: 12 }
+        ];
+
+        // Load salesperson data (this would normally come from an API)
+        function loadSalespersonData() {
+            // For now, use mock data - in production this would fetch from your backend
+            const mockData = {
+                name: salespersonEmail ? salespersonEmail.split('@')[0].charAt(0).toUpperCase() + salespersonEmail.split('@')[0].slice(1) : "Salesperson",
+                email: salespersonEmail || "salesperson@vertexprivatefunding.com",
+                currentModule: 1,
+                completedModules: [],
+                inProgressModules: [1],
+                totalCalls: 0,
+                totalMeetings: 0,
+                closedDeals: 0,
+                totalRevenue: 0,
+                revenueMonth: 0,
+                revenueQuarter: 0,
+                revenueYTD: 0,
+                sessions: []
+            };
+
+            // Update header
+            document.getElementById('salesperson-name').textContent = mockData.name;
+            document.getElementById('salesperson-email').textContent = mockData.email;
+            document.getElementById('current-module').textContent = `Module ${mockData.currentModule}`;
+
+            // Update progress
+            const progress = (mockData.completedModules.length / 12) * 100;
+            document.getElementById('overall-progress').textContent = `${Math.round(progress)}%`;
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+            document.getElementById('modules-completed').textContent = `${mockData.completedModules.length} of 12 modules completed`;
+
+            // Update stats
+            document.getElementById('total-calls').textContent = mockData.totalCalls;
+            document.getElementById('total-meetings').textContent = mockData.totalMeetings;
+            document.getElementById('closed-deals').textContent = mockData.closedDeals;
+            document.getElementById('total-revenue').textContent = `$${mockData.totalRevenue.toLocaleString()}`;
+
+            // Update revenue breakdown
+            document.getElementById('revenue-month').textContent = `$${mockData.revenueMonth.toLocaleString()}`;
+            document.getElementById('revenue-quarter').textContent = `$${mockData.revenueQuarter.toLocaleString()}`;
+            document.getElementById('revenue-ytd').textContent = `$${mockData.revenueYTD.toLocaleString()}`;
+            
+            const conversionRate = mockData.totalCalls > 0 ? ((mockData.closedDeals / mockData.totalCalls) * 100).toFixed(1) : 0;
+            document.getElementById('conversion-rate').textContent = `${conversionRate}%`;
+
+            // Render modules
+            renderModules(mockData);
+
+            // Render sessions
+            renderSessions(mockData.sessions);
+        }
+
+        function renderModules(data) {
+            const moduleList = document.getElementById('module-list');
+            moduleList.innerHTML = modules.map(module => {
+                const isCompleted = data.completedModules.includes(module.id);
+                const isInProgress = data.inProgressModules.includes(module.id);
+                const statusClass = isCompleted ? 'completed' : (isInProgress ? 'in-progress' : '');
+                const statusIcon = isCompleted ? '✅' : (isInProgress ? '🔄' : '⏳');
+                const statusText = isCompleted ? 'Completed' : (isInProgress ? 'In Progress' : 'Not Started');
+
+                return `
+                    <div class="module-card ${statusClass}">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">${statusIcon}</span>
+                                <div>
+                                    <div class="font-semibold text-gray-800">Module ${module.id}: ${module.title}</div>
+                                    <div class="text-sm text-gray-600">Week ${module.week}</div>
+                                </div>
+                            </div>
+                            <div class="text-sm font-medium ${isCompleted ? 'text-green-700' : (isInProgress ? 'text-yellow-700' : 'text-gray-500')}">
+                                ${statusText}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderSessions(sessions) {
+            const sessionHistory = document.getElementById('session-history');
+            
+            if (sessions.length === 0) {
+                sessionHistory.innerHTML = `
+                    <div class="text-center text-gray-500 py-8">
+                        No training sessions recorded yet
+                    </div>
+                `;
+                return;
+            }
+
+            sessionHistory.innerHTML = sessions.map(session => `
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="font-semibold text-gray-800">${session.title}</div>
+                        <div class="text-sm text-gray-600">${session.date}</div>
+                    </div>
+                    <div class="text-sm text-gray-600">${session.notes}</div>
+                </div>
+            `).join('');
+        }
+
+        // Load data when page loads
+        loadSalespersonData();
+    </script>
+</body>
+</html>
