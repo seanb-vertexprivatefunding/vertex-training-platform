@@ -179,24 +179,61 @@
             { id: 12, title: "Personal Performance Management", week: 12 }
         ];
 
-        // Load salesperson data (this would normally come from an API)
-        function loadSalespersonData() {
-            // For now, use mock data - in production this would fetch from your backend
-            const mockData = {
-                name: salespersonEmail ? salespersonEmail.split('@')[0].charAt(0).toUpperCase() + salespersonEmail.split('@')[0].slice(1) : "Salesperson",
-                email: salespersonEmail || "salesperson@vertexprivatefunding.com",
-                currentModule: 1,
-                completedModules: [],
-                inProgressModules: [1],
-                totalCalls: 0,
-                totalMeetings: 0,
-                closedDeals: 0,
-                totalRevenue: 0,
-                revenueMonth: 0,
-                revenueQuarter: 0,
-                revenueYTD: 0,
-                sessions: []
-            };
+        // Load salesperson data from API
+        async function loadSalespersonData() {
+            if (!salespersonEmail) {
+                console.error('No email provided');
+                return;
+            }
+            
+            let mockData;
+            
+            try {
+                // Fetch data from API
+                const response = await fetch(`/api/progress/salesperson/${encodeURIComponent(salespersonEmail)}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Loaded salesperson data:', data);
+                
+                // Use the data from API
+                mockData = {
+                    name: data.name || salespersonEmail.split('@')[0].charAt(0).toUpperCase() + salespersonEmail.split('@')[0].slice(1),
+                    email: data.email || salespersonEmail,
+                    currentModule: data.currentModule || 1,
+                    completedModules: data.completedModules || [],
+                    inProgressModules: data.inProgressModules || [],
+                    totalCalls: data.totalCalls || 0,
+                    totalMeetings: data.totalMeetings || 0,
+                    closedDeals: data.closedDeals || 0,
+                    totalRevenue: data.totalRevenue || 0,
+                    revenueMonth: data.revenueMonth || 0,
+                    revenueQuarter: data.revenueQuarter || 0,
+                    revenueYTD: data.revenueYTD || 0,
+                    sessions: data.sessions || []
+                };
+            } catch (error) {
+                console.error('Error loading salesperson data:', error);
+                // Fallback to default data
+                mockData = {
+                    name: salespersonEmail ? salespersonEmail.split('@')[0].charAt(0).toUpperCase() + salespersonEmail.split('@')[0].slice(1) : "Salesperson",
+                    email: salespersonEmail || "salesperson@vertexprivatefunding.com",
+                    currentModule: 1,
+                    completedModules: [],
+                    inProgressModules: [],
+                    totalCalls: 0,
+                    totalMeetings: 0,
+                    closedDeals: 0,
+                    totalRevenue: 0,
+                    revenueMonth: 0,
+                    revenueQuarter: 0,
+                    revenueYTD: 0,
+                    sessions: []
+                };
+            }
 
             // Update header
             document.getElementById('salesperson-name').textContent = mockData.name;
