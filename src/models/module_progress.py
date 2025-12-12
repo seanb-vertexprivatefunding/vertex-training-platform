@@ -41,6 +41,8 @@ class SalespersonStats(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_email = db.Column(db.String(120), unique=True, nullable=False, index=True)
     name = db.Column(db.String(100))
+    password = db.Column(db.String(200))  # Store hashed password
+    role = db.Column(db.String(20), default='salesperson')  # 'salesperson' or 'trainer'
     
     # Overall stats
     total_calls = db.Column(db.Integer, default=0)

@@ -7,28 +7,52 @@ init_team_bp = Blueprint('init_team', __name__)
 
 @init_team_bp.route('/init-all-team', methods=['GET'])
 def init_all_team():
-    """Initialize all team members - run once after deployment"""
+    """Initialize all team members with passwords - run once after deployment"""
     
     team_members = [
         {
-            'email': 'shawn@vertexfunding.com',
-            'name': 'Shawn - Head of Lead Response',
-            'modules': [1, 4, 5, 6],
-            'completed_modules': [],  # Shawn hasn't completed any yet
+            'email': 'seanb@vertexprivatefunding.com',
+            'name': 'Sean B - CEO/Trainer',
+            'password': 'trainer123',
+            'role': 'trainer',
+            'modules': list(range(1, 13)),  # All modules
+            'completed_modules': [],
             'current_module': 1
         },
         {
-            'email': 'ronald@vertexfunding.com',
+            'email': 'sean.bristol@icloud.com',
+            'name': 'Sean Bristol (Personal Training Account)',
+            'password': 'vertex2024',
+            'role': 'salesperson',
+            'modules': list(range(1, 13)),  # All modules for CEO to go through training
+            'completed_modules': [],
+            'current_module': 1
+        },
+        {
+            'email': 'shawn@vertexprivatefunding.com',
+            'name': 'Shawn - Head of Lead Response',
+            'password': 'sales123',
+            'role': 'salesperson',
+            'modules': [1, 4, 5, 6],
+            'completed_modules': [],
+            'current_module': 1
+        },
+        {
+            'email': 'ronald@vertexprivatefunding.com',
             'name': 'Ronald - Head of Client Relationships',
+            'password': 'sales123',
+            'role': 'salesperson',
             'modules': [2, 7, 10, 11],
-            'completed_modules': [1, 2],  # Ronald completed Modules 1 & 2
+            'completed_modules': [1, 2],
             'current_module': 3
         },
         {
-            'email': 'tamara@vertexfunding.com',
+            'email': 'tamara@vertexprivatefunding.com',
             'name': 'Tamara - Head of Operations',
+            'password': 'sales123',
+            'role': 'salesperson',
             'modules': [3, 10, 12],
-            'completed_modules': [1, 2],  # Tamara completed Modules 1 & 2
+            'completed_modules': [1, 2],
             'current_module': 3
         }
     ]
@@ -40,15 +64,19 @@ def init_all_team():
         existing = SalespersonStats.query.filter_by(user_email=member['email']).first()
         
         if existing:
-            # Update name and current module
+            # Update name, password, role, and current module
             existing.name = member['name']
+            existing.password = member['password']
+            existing.role = member['role']
             existing.current_module = member['current_module']
             results.append(f"Updated: {member['name']}")
         else:
-            # Create new salesperson
+            # Create new user
             stats = SalespersonStats(
                 user_email=member['email'],
                 name=member['name'],
+                password=member['password'],
+                role=member['role'],
                 total_calls=0,
                 total_meetings=0,
                 closed_deals=0,
@@ -103,33 +131,46 @@ def init_all_team():
     
     return jsonify({
         'status': 'success',
-        'message': 'All team members initialized successfully!',
+        'message': 'All team members initialized with authentication!',
         'results': results,
-        'team': [
+        'credentials': [
             {
-                'name': 'Shawn - Head of Lead Response', 
-                'assigned_modules': [1, 4, 5, 6],
-                'completed': [],
-                'current': 1
+                'name': 'Sean B - CEO/Trainer',
+                'email': 'seanb@vertexprivatefunding.com',
+                'password': 'trainer123',
+                'role': 'Trainer (see all salespeople)',
+                'access': 'All 12 modules'
             },
             {
-                'name': 'Ronald - Head of Client Relationships', 
+                'name': 'Sean Bristol (Personal Training)',
+                'email': 'sean.bristol@icloud.com',
+                'password': 'vertex2024',
+                'role': 'Salesperson (go through training)',
+                'access': 'All 12 modules'
+            },
+            {
+                'name': 'Shawn - Lead Response',
+                'email': 'shawn@vertexprivatefunding.com',
+                'password': 'sales123',
+                'role': 'Salesperson',
+                'assigned_modules': [1, 4, 5, 6]
+            },
+            {
+                'name': 'Ronald - Client Relationships',
+                'email': 'ronald@vertexprivatefunding.com',
+                'password': 'sales123',
+                'role': 'Salesperson',
                 'assigned_modules': [2, 7, 10, 11],
-                'completed': [1, 2],
-                'current': 3
+                'completed': [1, 2]
             },
             {
-                'name': 'Tamara - Head of Operations', 
+                'name': 'Tamara - Operations',
+                'email': 'tamara@vertexprivatefunding.com',
+                'password': 'sales123',
+                'role': 'Salesperson',
                 'assigned_modules': [3, 10, 12],
-                'completed': [1, 2],
-                'current': 3
-            },
-            {
-                'name': 'Sean Bristol (CEO)', 
-                'assigned_modules': 'All 12',
-                'completed': [],
-                'current': 1
+                'completed': [1, 2]
             }
         ],
-        'next_step': 'Refresh the trainer dashboard at https://vertexsalestraining.com/trainer'
+        'next_step': 'The frontend will now authenticate via /api/auth/login endpoint'
     })
