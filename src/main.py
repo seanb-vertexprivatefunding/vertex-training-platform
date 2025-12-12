@@ -9,6 +9,7 @@ from src.models.user import db
 from src.routes.user import user_bp
 from src.routes.progress import progress_bp
 from src.routes.admin import admin_bp
+from src.routes.init_team import init_team_bp
 
 
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
@@ -20,6 +21,7 @@ CORS(app)
 app.register_blueprint(user_bp, url_prefix='/api')
 app.register_blueprint(progress_bp, url_prefix='/api/progress')
 app.register_blueprint(admin_bp, url_prefix='/api/admin')
+app.register_blueprint(init_team_bp, url_prefix='/api/admin')
 
 
 # uncomment if you need to use database
