@@ -11,6 +11,7 @@ from src.routes.progress import progress_bp
 from src.routes.admin import admin_bp
 from src.routes.init_team import init_team_bp
 from src.routes.auth import auth_bp
+from src.routes.debug import debug_bp
 
 
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
@@ -24,6 +25,7 @@ app.register_blueprint(progress_bp, url_prefix='/api/progress')
 app.register_blueprint(admin_bp, url_prefix='/api/admin')
 app.register_blueprint(init_team_bp, url_prefix='/api/admin')
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
+app.register_blueprint(debug_bp, url_prefix='/api/debug')
 
 
 # uncomment if you need to use database
