@@ -106,7 +106,9 @@
                 e.stopPropagation();
                 e.stopImmediatePropagation();
             }
-            openPDFModal('/training-materials/Module_01_One_Page_Summary.pdf', 'Module 1: One-Page Summary');
+            const moduleNum = findModuleNumber(button) || 1;
+            const modulePadded = String(moduleNum).padStart(2, '0');
+            openPDFModal(`/training-materials/Module_${modulePadded}_One_Page_Summary.pdf`, `Module ${moduleNum}: One-Page Summary`);
             return true;
         } else if (buttonText.includes('Action Worksheet')) {
             if (e) {
@@ -114,7 +116,21 @@
                 e.stopPropagation();
                 e.stopImmediatePropagation();
             }
-            openPDFModal('/training-materials/Module_01_Action_Worksheet.pdf', 'Module 1: Action Worksheet');
+            const moduleNum = findModuleNumber(button) || 1;
+            const modulePadded = String(moduleNum).padStart(2, '0');
+            const worksheetFiles = {
+                '01': 'Module_01_Action_Worksheet.pdf',
+                '02': 'Module_02_DISC_Assessment_Worksheet.pdf',
+                '03': 'Module_03_Sales_Process_Worksheet.pdf',
+                '04': 'Module_04_Prospecting_Worksheet.pdf',
+                '05': 'Module_05_Discovery_Call_Worksheet.pdf',
+                '06': 'Module_06_Rapport_Trust_Worksheet.pdf',
+                '07': 'Module_07_Worksheet.pdf',
+                '08': 'Module_08_Worksheet.pdf',
+                '09': 'Module_09_Worksheet.pdf'
+            };
+            const pdfFilename = worksheetFiles[modulePadded] || `Module_${modulePadded}_Worksheet.pdf`;
+            openPDFModal(`/training-materials/${pdfFilename}`, `Module ${moduleNum}: Worksheet`);
             return true;
         } else if (buttonText.includes('Script Templates')) {
             if (e) {
@@ -122,7 +138,21 @@
                 e.stopPropagation();
                 e.stopImmediatePropagation();
             }
-            openPDFModal('/training-materials/Module_01_Sales_Mindset_Training_Guide.pdf', 'Module 1: Training Guide');
+            const moduleNum = findModuleNumber(button) || 1;
+            const modulePadded = String(moduleNum).padStart(2, '0');
+            const trainingGuideFiles = {
+                '01': 'Module_01_Sales_Mindset_Training_Guide.pdf',
+                '02': 'Module_02_Understanding_Buyer_Training_Guide.pdf',
+                '03': 'Module_03_Sales_Process_Training_Guide.pdf',
+                '04': 'Module_04_Prospecting_Training_Guide.pdf',
+                '05': 'Module_05_Discovery_Call_Training_Guide.pdf',
+                '06': 'Module_06_Rapport_Trust_Training_Guide.pdf',
+                '07': 'Module_07_Presenting_Solutions_Training_Guide.pdf',
+                '08': 'Module_08_Handling_Objections_Training_Guide.pdf',
+                '09': 'Module_09_Negotiation_Closing_Training_Guide.pdf'
+            };
+            const pdfFilename = trainingGuideFiles[modulePadded] || `Module_${modulePadded}_Training_Guide.pdf`;
+            openPDFModal(`/training-materials/${pdfFilename}`, `Module ${moduleNum}: Training Guide`);
             return true;
         }
         // Handle trainer resource page buttons
